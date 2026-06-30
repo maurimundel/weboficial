@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Premio Argentina Economía Circular 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Playfair+Display:ital,wght@0,700;1,700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  html, body { 
+    background: #000; 
+    font-family: 'DM Sans', sans-serif;
+    color: #fff;
+    cursor: none;
+    width: 100%;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+  }
+
+  /* ── CURSOR GLOBAL ── */
+  #cur { 
+    position: fixed; width: 6px; height: 6px; background: #fff; 
+    border-radius: 50%; pointer-events: none; z-index: 9999; 
+    transform: translate(-50%, -50%); 
+    transition: transform 0.2s; mix-blend-mode: difference; 
+  }
+  #cur.hovered { transform: translate(-50%, -50%) scale(0); }
+  #cur-ring { 
+    position: fixed; width: 32px; height: 42px;
+    pointer-events: none; z-index: 9998; 
+    transform: translate(-50%, -50%); 
+    transition: width 0.3s, height 0.3s; 
+  }
+  .fp-logo {
+    width: 100%; height: 100%;
+    background: repeating-radial-gradient(
+      circle at 40% 50%,
+      transparent 0, transparent 3px,
+      rgba(255, 255, 255, 0.6) 4px, rgba(255, 255, 255, 0.6) 5.5px
+    );
+    clip-path: polygon(10% 0%, 95% 5%, 85% 40%, 65% 75%, 55% 100%, 45% 100%, 25% 65%, 5% 30%);
+    transition: all 0.3s ease;
+  }
+  #cur-ring.hovered { width: 55px; height: 75px; }
+  #cur-ring.hovered .fp-logo {
+    background: repeating-radial-gradient(
+      circle at 40% 50%,
+      transparent 0, transparent 4px,
+      #FFD700 5px, #FFD700 7.5px
+    );
+  }
+  @media (hover:none) { body{cursor:auto;} #cur,#cur-ring{display:none;} }
+
+  /* ── ESTILOS HEADER ── */
+  .main-header-bar {
+    position: fixed; top: 0; left: 0;
+    width: 100vw !important; max-width: 100vw !important; z-index: 100;
+    display: grid !important; grid-template-columns: 1fr auto 1fr; align-items: center;
+    padding: 1.2rem 3rem; box-sizing: border-box;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 100%);
+    transition: background 0.4s ease, padding 0.3s ease, box-shadow 0.4s ease;
+  }
+  .main-header-bar.scrolled {
+    background: rgba(5, 5, 5, 0.92);
+    backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+    box-shadow: 0 2px 30px rgba(0,0,0,0.5);
+    padding: 0.7rem 3rem;
+  }
+  .header-col-left { display: flex; justify-content: flex-start; width: 100%; }
+  /* CORRECCIÓN: logo agrandado */
+  .header-logo { height: 130px; width: auto; object-fit: contain; opacity: 0.9; transition: all 0.3s ease; }
+  .header-logo:hover { opacity: 1; transform: scale(1.05); }
+  .main-header-bar.scrolled .header-logo { height: 92px; }
+  .header-col-center { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .header-col-right { display: block; width: 100%; }
+  .nav-menu {
+    position: relative; display: flex; flex-direction: row !important; align-items: center;
+    width: max-content; border-radius: 9999px; border: 1px solid rgba(255, 255, 255, 0.2); 
+    background-color: rgba(10, 10, 10, 0.4); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    padding: 0.35rem; margin: 0;
+  }
+  .nav-item {
+    position: relative; z-index: 10; display: inline-block; cursor: pointer;
+    padding: 0.5rem 1rem; font-size: 0.8rem; text-transform: uppercase;
+    color: #ffffff; font-weight: 700; letter-spacing: 0.05em;
+    mix-blend-mode: difference; text-decoration: none !important; 
+  }
+  @media (min-width: 768px) { .nav-item { padding: 0.6rem 1.2rem; font-size: 0.85rem; } }
+  .nav-cursor {
+    position: absolute; z-index: 0; height: calc(100% - 0.7rem); top: 0.35rem; left: 0;
+    border-radius: 9999px; background-color: #ffffff; opacity: 0;
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), width 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease;
+    pointer-events: none;
+  }
+  .swipe-hint { display: none; }
+  @media (max-width: 850px) {
+    .main-header-bar {
+      display: flex !important; flex-direction: column; align-items: center;
+      padding: 1.5rem 1rem 1.2rem 1rem; gap: 1.2rem;
+      background: rgba(5, 5, 5, 0.92);
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    }
+    .header-col-right { display: none; }
+    .header-col-left { justify-content: center; }
+    .header-logo { height: 78px; }
+    .header-col-center { width: 100%; }
+    .nav-menu {
+      flex-wrap: nowrap !important; justify-content: flex-start; width: 92vw; max-width: 400px;
+      overflow-x: auto; -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory; 
+      border-radius: 9999px; padding: 0.4rem; scrollbar-width: none; -ms-overflow-style: none; 
+    }
+    .nav-menu::-webkit-scrollbar { display: none; }
+    .nav-item { font-size: 0.75rem; padding: 0.6rem 1rem; flex-shrink: 0; scroll-snap-align: center; }
+    .swipe-hint {
+      display: block; margin-top: 0.8rem; font-size: 0.65rem; color: rgba(255, 255, 255, 0.6);
+      text-transform: uppercase; letter-spacing: 0.15em; animation: pulseHint 2s infinite;
+    }
+    @keyframes pulseHint { 0%, 100% { opacity: 0.3; transform: translateX(-3px); } 50% { opacity: 1; transform: translateX(3px); } }
+    @media (hover: none) { .nav-cursor { display: none; } .nav-item { mix-blend-mode: normal; } }
+  }
+
+  /* ── ESTILOS SECCIÓN 1: HERO ── */
+  .hero {
+    position: relative; width: 100%; min-height: 100vh;
+    display: flex; align-items: center; justify-content: center; overflow: hidden; 
+    padding-top: 100px;
+    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)), url('FONDOSECCION1.jpeg') center/cover no-repeat;
+  }
+  .rings { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none; z-index: 0; }
+  .ring { position: absolute; border-radius: 50%; border: 1px solid rgba(255, 255, 255, 0.03); }
+  .ring::after, .ring::before { content:''; position:absolute; border-radius:50%; }
+  .ring::after { width:8px; height:8px; top: -4px; left: 50%; transform: translateX(-50%); }
+  .ring::before { width:4px; height:4px; bottom: 15%; right: 10%; }
+  .r1 { width: 35vw; height: 35vw; min-width: 350px; min-height: 350px; animation: spin 40s linear infinite; }
+  .r1::after, .r1::before { background: #FFD700; box-shadow: 0 0 15px 3px rgba(255,215,0,.6); }
+  .r2 { width: 45vw; height: 45vw; min-width: 450px; min-height: 450px; animation: spin 55s linear infinite reverse; }
+  .r2::after, .r2::before { background: #FF8C00; box-shadow: 0 0 15px 3px rgba(255,140,0,.6); }
+  .r3 { width: 55vw; height: 55vw; min-width: 550px; min-height: 550px; animation: spin 70s linear infinite; }
+  .r3::after, .r3::before { background: #9932CC; box-shadow: 0 0 15px 3px rgba(153,50,204,.6); }
+  .r4 { width: 70vw; height: 70vw; min-width: 700px; min-height: 700px; animation: spin 90s linear infinite reverse; }
+  .r4::after, .r4::before { background: #00CED1; box-shadow: 0 0 15px 3px rgba(0,206,209,.6); }
+  .r5 { width: 85vw; height: 85vw; min-width: 850px; min-height: 850px; animation: spin 110s linear infinite; }
+  .r5::after, .r5::before { background: #20B2AA; box-shadow: 0 0 15px 3px rgba(32,178,170,.6); }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .content { position: relative; z-index: 2; text-align: center; padding: 0 2rem; max-width: 1000px; width: 100%; }
+  .eyebrow { font-weight: 700; font-size: clamp(1rem, 2vw, 1.2rem); letter-spacing: .25em; text-transform: uppercase; color: rgba(255, 255, 255, 0.85); margin-bottom: 2em; opacity: 0; animation: fadeUp .8s .2s forwards; }
+  .title { font-family: 'Bebas Neue', sans-serif; line-height: 0.9; letter-spacing: .02em; margin-bottom: 3rem; opacity: 0; animation: fadeUp .8s .4s forwards; text-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+  .title .solid-white { 
+    color: #FFFFFF; 
+    display: block; 
+    font-size: clamp(4rem, 10vw, 9rem); 
+  }
+  .title .dynamic-color { 
+    display: block; 
+    white-space: nowrap;
+    font-size: clamp(2rem, 7.5vw, 7rem);
+    animation: colorCycle 15s ease-in-out infinite; 
+  }
+  @keyframes colorCycle { 0%, 12% { color: #20B2AA; } 20%, 32% { color: #00CED1; } 40%, 52% { color: #9932CC; } 60%, 72% { color: #FF8C00; } 80%, 92% { color: #FFD700; } 100% { color: #20B2AA; } }
+  .sub { font-size: clamp(1.1rem, 2.2vw, 1.4rem); font-weight: 500; color: #FFFFFF; max-width: 820px; margin: 0 auto 3.5rem; line-height: 1.6; text-shadow: 0 2px 5px rgba(0,0,0,0.8); opacity: 0; animation: fadeUp .8s .6s forwards; }
+  .actions { display: flex; gap: 1rem; justify-content: center; opacity: 0; animation: fadeUp .8s .8s forwards; }
+  .btn-main { display: inline-block; text-decoration: none; font-family: 'DM Sans', sans-serif; font-size: clamp(.8rem, 1.5vw, .95rem); letter-spacing: .1em; text-transform: uppercase; background: #FFD700; color: #000; border: none; border-radius: 50px; font-weight: 700; padding: clamp(1rem,2.5vw,1.2rem) clamp(2rem,4vw,3rem); cursor: none; transition: all .3s cubic-bezier(0.25, 0.8, 0.25, 1); box-shadow: 0 4px 15px rgba(255,215,0,.2); }
+  .btn-main:hover { transform: translateY(-4px); box-shadow: 0 15px 30px rgba(255,215,0,.4); background: #fff; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(30px); } to { opacity:1; transform:translateY(0); } }
+
+  /* ── ESTILOS SECCIÓN 2: OBJETIVOS ── */
+  /* CORRECCIÓN: altura mínima igual al resto de secciones */
+  .premio-section-container {
+    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url('bfb82722-e9f2-4857-af77-5330ba3d8240.jpeg') center/cover no-repeat;
+    width: 100%; min-height: 100vh; padding: 8rem 2rem; box-sizing: border-box;
+    display: flex; align-items: center; justify-content: center; gap: 4rem; overflow: hidden; position: relative;
+  }
+  .premio-text-side { flex: 1; max-width: 450px; text-align: center; z-index: 5; margin: 0 auto; }
+  .premio-text-side h2 { font-size: 3.2rem; font-weight: 800; color: #ffffff; line-height: 1.1; margin: 0 0 1rem 0; letter-spacing: -0.02em; text-transform: uppercase; text-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+  .premio-text-side p { --bullet-color: #1A7870; font-size: 1.1rem; font-weight: 600; color: #ffffff; opacity: 0.9; margin: 0; letter-spacing: 0.05em; text-transform: uppercase; display: inline-flex; align-items: center; gap: 10px; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
+  .premio-text-side p::before { content: ''; flex-shrink: 0; width: 8px; height: 8px; background-color: var(--bullet-color); border-radius: 50%; transition: background-color 0.8s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 0 10px var(--bullet-color); }
+  .premio-widget-side { flex: 1; display: flex; justify-content: center; align-items: center; z-index: 5; perspective: 1200px; }
+  .auto-circle-widget { position: relative; width: 100%; max-width: 420px; aspect-ratio: 1; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: none; transition: transform 1.2s cubic-bezier(0.25, 1, 0.5, 1), opacity 1s ease, filter 1s ease; transform: scale(1) rotateY(0deg) rotateX(0deg) translateZ(0); transform-style: preserve-3d; opacity: 1; filter: blur(0px); }
+  .auto-circle-widget.respira { transform: scale(0.85) rotateY(180deg) translateZ(-100px); opacity: 0; filter: blur(10px); }
+  .rotating-bg { position: absolute; top: -5%; left: -5%; width: 110%; height: 110%; border-radius: 50%; background: repeating-radial-gradient(circle at 50% 50%, transparent 0, transparent 10px, rgba(255, 255, 255, 0.03) 11px, rgba(255, 255, 255, 0.03) 15px); border: 1px solid rgba(255, 255, 255, 0.1); animation: spinBg 40s linear infinite; z-index: 1; transform: translateZ(-20px); }
+  @keyframes spinBg { 100% { transform: translateZ(-20px) rotate(360deg); } }
+  .center-content { position: relative; z-index: 2; width: 82%; height: 82%; background: rgba(10, 10, 10, 0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2.5rem; box-sizing: border-box; box-shadow: 0 20px 50px rgba(0,0,0,0.5), inset 0 0 30px rgba(26, 120, 112, 0.2); transition: box-shadow 1s ease, border-color 1s ease; border: 2px solid #1A7870; transform: translateZ(20px); }
+  .text-wrapper { color: #ffffff; transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.6s ease; transform: scale(1); opacity: 1; }
+  .auto-circle-widget.respira .text-wrapper { transform: scale(0.5); opacity: 0; }
+  #auto-num { font-family: 'Bebas Neue', sans-serif; font-size: 4.8rem; line-height: 1; margin-bottom: 0.2rem; color: #1A7870; transition: color 1s ease, text-shadow 1s ease; text-shadow: 0 0 20px rgba(26, 120, 112, 0.4); }
+  #auto-title { font-size: 1.4rem; font-weight: 700; margin: 0 0 0.8rem 0; letter-spacing: -0.01em; line-height: 1.2; }
+  #auto-desc { font-size: 0.95rem; color: rgba(255, 255, 255, 0.8); line-height: 1.5; margin: 0; }
+  .dots-container { position: absolute; bottom: -45px; left: 50%; transform: translateX(-50%) translateZ(30px); display: flex; gap: 15px; transition: opacity 0.8s ease, transform 0.8s ease; }
+  .auto-circle-widget.respira .dots-container { opacity: 0; transform: translateX(-50%) translateZ(30px) translateY(20px); }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255, 255, 255, 0.2); transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1); cursor: pointer; }
+  .dot.active { background: #ffffff; transform: scale(1.6); box-shadow: 0 0 10px rgba(255, 255, 255, 0.5); }
+
+  /* ── ESTILOS SECCIÓN 3: PREMIADOS ── */
+  :root {
+    --c-violet: #8F479D; --c-turq: #36B4A9; --c-yel: #F8C619; --c-pink: #E54269; --c-blue: #36B1E2; --c-org: #DB7621; --c1: var(--c-yel); 
+    --card-bg: rgba(10, 10, 10, 0.4);
+  }
+  /* CORRECCIÓN: sección Premiados con altura completa + título añadido */
+  .gs {
+    position: relative; width: 100%; overflow: hidden;
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6)), url('IMG_9097 (1).jpeg') center/cover no-repeat;
+    min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding-top: 60px; padding-bottom: 60px;
+  }
+  /* NUEVO: título de sección PREMIADOS */
+  .gs-section-title {
+    position: relative; z-index: 5;
+    text-align: center;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2.8rem, 7vw, 5.5rem);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #ffffff;
+    text-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    margin-bottom: 10px;
+    padding: 0 2rem;
+  }
+  .gs-section-title span {
+    color: var(--card-color, var(--c-yel));
+    transition: color 0.6s ease;
+  }
+  #gs-canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; opacity: 5.00; }
+  .gs-counter { position: absolute; right: clamp(20px,5vw,80px); top: 50%; transform: translateY(-50%); font-family: 'Bebas Neue', sans-serif; font-size: clamp(8rem,18vw,16rem); line-height: 1; color: rgba(255,255,255,0.08); letter-spacing: -0.02em; pointer-events: none; z-index: 2; transition: color 0.6s; user-select: none; mix-blend-mode: overlay; }
+  .gs-outer { position: relative; z-index: 5; overflow: hidden; -webkit-mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%); mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%); width: 100%; margin-top: 40px; }
+  .gs-swiper { width: 100%; padding: 20px 0 60px !important; overflow: visible !important; }
+  .gs-swiper .swiper-slide { width: 320px !important; height: auto; opacity: 0.3; transform: scale(0.85) translateY(20px); transition: opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1), transform 0.6s cubic-bezier(0.25, 1, 0.5, 1); will-change: transform, opacity; }
+  .gs-swiper .swiper-slide-active { opacity: 1; transform: scale(1.05) translateY(0); z-index: 10; }
+  .gs-swiper .swiper-slide-prev, .gs-swiper .swiper-slide-next { opacity: 0.7; transform: scale(0.9) translateY(10px); }
+  .gs-card { position: relative; border-radius: 8px; overflow: hidden; background: var(--card-bg); cursor: none; aspect-ratio: 4/5; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7); border: 1px solid rgba(255,255,255,0.1); }
+  .gs-card::after { content: ''; position: absolute; inset: 0; border: 3px solid transparent; border-radius: 8px; z-index: 3; transition: border-color 0.5s ease; pointer-events: none; }
+  .swiper-slide-active .gs-card::after { border-color: var(--card-color); box-shadow: inset 0 0 20px rgba(0,0,0,0.5), 0 0 15px var(--card-color); }
+  .gs-card img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.8s cubic-bezier(0.25,1,0.5,1), filter 0.5s; filter: brightness(0.7) contrast(1.1); }
+  .swiper-slide-active .gs-card img { filter: brightness(1) contrast(1); }
+  .gs-card:hover img { transform: scale(1.08); }
+  .gs-info { position: absolute; bottom: 0; left: 0; right: 0; padding: 40px 20px 20px; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 60%, transparent 100%); transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.25,1,0.5,1); z-index: 4; }
+  .swiper-slide-active .gs-card:hover .gs-info { transform: translateY(0); }
+  .gs-info-tag { display: inline-block; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: #fff; background: var(--card-color); padding: 4px 12px; border-radius: 3px; margin-bottom: 8px; }
+  .controls-wrapper { position: relative; z-index: 5; display: flex; flex-direction: column; align-items: center; gap: 15px; margin-top: -10px; }
+  .gs-nav { display: flex; gap: 15px; }
+  .gs-btn { width: 50px; height: 50px; border-radius: 50%; border: 1px solid var(--card-color, rgba(255,255,255,0.2)); background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); color: var(--card-color, #fff); display: flex; align-items: center; justify-content: center; cursor: none; transition: all 0.3s cubic-bezier(0.25,1,0.5,1); font-size: 20px; padding: 0; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+  .gs-btn:hover { background: var(--card-color, var(--c1)); color: #000 !important; transform: scale(1.1); border-color: transparent; }
+
+  /* ── ESTILOS SECCIÓN 4: MEDIOS ── */
+  /* CORRECCIÓN: imagen de fondo cambiada a la nueva ruta local + eliminado "cobertura mediática" via CSS */
+  .press-section {
+    background: linear-gradient(rgba(15, 15, 15, 0.5), rgba(15, 15, 15, 0.6)), url('IMG_9095.jpeg') center/cover fixed;
+    padding: 80px 0 100px; position: relative; cursor: none; min-height: 100vh;
+  }
+  .press-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+  .press-header { margin-bottom: 56px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 28px; }
+  /* CORRECCIÓN: eliminado el eyebrow "cobertura mediática" */
+  .press-eyebrow { display: none; }
+  .press-title { font-family: 'Bebas Neue', sans-serif; font-style: normal; font-weight: 400; font-size: clamp(2.6rem,5vw,4.4rem); line-height: 0.95; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.8); letter-spacing: 0.01em; text-transform: uppercase; }
+  .press-title span { color: #FFD700; font-style: normal; }
+  .press-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .press-card { position: relative; background: rgba(15,15,15,0.80); overflow: hidden; cursor: none; text-decoration: none; color: inherit; display: flex; flex-direction: column; justify-content: flex-end; padding: 24px 22px 22px; min-height: 220px; transition: transform 0.3s ease, border-color 0.3s ease; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 24px rgba(0,0,0,0.15), inset 0 1px 1px rgba(255,255,255,0.15); }
+  .press-card:hover { transform: translateY(-5px); border-color: rgba(255, 255, 255, 0.3); }
+  .press-card__bg { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0.40; transition: opacity 0.5s ease, transform 0.8s cubic-bezier(0.25,1,0.5,1); z-index: 0; transform: scale(1.05); }
+  .press-card:hover .press-card__bg { opacity: 0.65; transform: scale(1); } 
+  .press-card__overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.25) 60%, transparent 100%); z-index: 1; pointer-events: none; }
+  .press-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, var(--accent-color) 0%, transparent 55%); opacity: 0; transition: opacity 0.4s ease; z-index: 2; }
+  .press-card:hover::before { opacity: 0.10; }
+  .press-card::after { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--accent-color); transform: scaleY(0); transform-origin: bottom; transition: transform 0.4s cubic-bezier(0.25,1,0.5,1); z-index: 10; border-radius: 20px 0 0 20px; }
+  .press-card:hover::after { transform: scaleY(1); }
+  .press-card--featured { grid-column: span 2; min-height: 300px; padding: 32px 30px 28px; }
+  .press-card--featured .press-card__headline { font-size: clamp(1.1rem,2vw,1.45rem); line-height: 1.3; }
+  .press-card--tall { grid-row: span 2; min-height: 460px; }
+  .press-card__content { position: relative; z-index: 5; }
+  .press-card__source { display:inline-flex; align-items:center; gap:7px; margin-bottom:10px; }
+  .press-card__logo { font-family: 'Bebas Neue', sans-serif; font-size: 0.75rem; letter-spacing: 0.1em; color: var(--accent-color); background: rgba(255,255,255,0.05); border: 1px solid var(--accent-color); padding: 2px 9px; border-radius: 4px; line-height: 1.6; }
+  .press-card__date { font-size: 0.68rem; color: rgba(255,255,255,0.45); letter-spacing: 0.08em; }
+  .press-card__headline { font-family: 'Playfair Display', serif; font-weight: 700; font-size: clamp(0.92rem,1.4vw,1.1rem); line-height: 1.4; color: #fff; margin-bottom: 12px; transition: color 0.3s; }
+  .press-card:hover .press-card__headline { color: var(--accent-color); }
+  .press-card__excerpt { font-size:0.8rem; color:rgba(255,255,255,0.45); line-height:1.6; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+  .press-card__arrow { display:inline-flex; align-items:center; gap:6px; margin-top:14px; font-size:0.72rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--accent-color); opacity:0; transform:translateX(-8px); transition:opacity 0.3s, transform 0.3s; }
+  .press-card:hover .press-card__arrow { opacity:1; transform:translateX(0); }
+  .press-card__arrow svg { transition:transform 0.3s; }
+  .press-card:hover .press-card__arrow svg { transform:translateX(4px); }
+  .press-card__index { position:absolute; top:16px; right:18px; font-family:'Bebas Neue',sans-serif; font-size:4rem; line-height:1; color:rgba(255,255,255,0.04); letter-spacing:-0.03em; z-index:3; user-select:none; }
+  .press-card--tablet { background: rgba(8,8,8,0.4); align-items: center; justify-content: center; padding: 30px 24px; grid-row: span 2; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 24px rgba(0,0,0,0.15), inset 0 1px 1px rgba(255,255,255,0.15); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+  .tablet-device { position: relative; width: 100%; max-width: 440px; aspect-ratio: 4/3; background: linear-gradient(145deg, #2a2a2a, #111); border-radius: 28px; padding: 20px 20px 28px 20px; box-shadow: 0 0 0 2px #333, 0 20px 50px rgba(0,0,0,0.9), inset 0 1px 2px rgba(255,255,255,0.3), inset 0 -2px 5px rgba(0,0,0,0.5); display: flex; flex-direction: column; }
+  .tablet-device::before { content: ''; position: absolute; top: 50px; left: -3px; width: 3px; height: 40px; background: #333; border-radius: 3px 0 0 3px; box-shadow: inset 1px 0 2px rgba(255,255,255,0.2); }
+  .tablet-device::after { content: ''; position: absolute; top: 100px; left: -3px; width: 3px; height: 60px; background: #333; border-radius: 3px 0 0 3px; box-shadow: inset 1px 0 2px rgba(255,255,255,0.2); }
+  .tablet-camera { position: absolute; top: 9px; left: 50%; transform: translateX(-50%); width: 8px; height: 8px; background: #050505; border-radius: 50%; box-shadow: inset 0 1px 3px rgba(255,255,255,0.2), 0 0 0 1px rgba(255,255,255,0.05); z-index: 20; }
+  .tablet-camera::after { content: ''; position: absolute; top: 2px; left: 2px; width: 2px; height: 2px; background: rgba(50, 150, 255, 0.4); border-radius: 50%; }
+  .tablet-screen { position: relative; flex: 1; overflow: hidden; background: #000; border-radius: 8px; box-shadow: inset 0 0 10px rgba(0,0,0,0.8), 0 0 0 1px #000; }
+  .newspaper { position: absolute; inset: 0; overflow: hidden; background: #f5f0e8; display: flex; flex-direction: column; opacity: 0; transition: opacity 1s ease; z-index: 5; }
+  .newspaper.active { opacity: 1; }
+  .np-masthead { background: #1a1a1a; color: #f5f0e8; text-align: center; padding: 8px 10px 7px; border-bottom: 3px solid var(--accent-col, #F8C619); flex-shrink: 0; }
+  .np-masthead-name { font-family: 'Playfair Display', serif; font-weight: 700; text-transform: uppercase; font-size: clamp(0.85rem, 2.2vw, 1.1rem); letter-spacing: 0.05em; line-height: 1; color: #fff; }
+  .np-masthead-sub { font-family: 'DM Sans', sans-serif; font-size: 0.5rem; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.55); margin-top: 4px; }
+  .np-body { flex: 1; display: flex; gap: 0; overflow: hidden; }
+  .np-col-main { flex: 0 0 58%; border-right: 1px solid #bbb; display: flex; flex-direction: column; overflow: hidden; }
+  .np-img { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; flex-shrink: 0; border-bottom: 1px solid #bbb; filter: grayscale(20%) contrast(1.05); }
+  .np-main-text { padding: 8px 10px 6px; flex: 1; }
+  .np-kicker { font-family: 'DM Sans', sans-serif; font-size: 0.42rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent-col, #8F479D); margin-bottom: 4px; }
+  .np-headline { font-family: 'Playfair Display', serif; font-weight: 700; font-size: clamp(0.55rem, 1.4vw, 0.78rem); line-height: 1.25; color: #111; margin-bottom: 5px; }
+  .np-deck { font-family: 'DM Sans', sans-serif; font-size: 0.42rem; line-height: 1.5; color: #444; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .np-col-side { flex: 1; padding: 6px 8px; display: flex; flex-direction: column; gap: 8px; overflow: hidden; }
+  .np-source-badge { font-family: 'Bebas Neue', sans-serif; font-size: clamp(0.6rem, 1.6vw, 0.85rem); letter-spacing: 0.06em; color: var(--accent-col, #8F479D); border-bottom: 1.5px solid var(--accent-col, #8F479D); padding-bottom: 3px; margin-bottom: 2px; }
+  .np-date-line { font-family: 'DM Sans', sans-serif; font-size: 0.4rem; color: #777; letter-spacing: 0.1em; text-transform: uppercase; }
+  .np-divider { width: 100%; height: 1px; background: #ccc; flex-shrink: 0; }
+  .np-secondary-headline { font-family: 'Playfair Display', serif; font-size: 0.5rem; line-height: 1.3; color: #222; font-weight: 700; }
+  .np-secondary-body { font-family: 'DM Sans', sans-serif; font-size: 0.38rem; line-height: 1.5; color: #555; display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden; }
+  .np-rules { display: flex; gap: 0; padding: 0 10px; flex-shrink: 0; border-top: 1px solid #bbb; padding-top: 4px; padding-bottom: 2px; overflow: hidden; }
+  .np-rule-item { flex: 1; font-family: 'DM Sans', sans-serif; font-size: 0.32rem; color: #999; text-align: center; border-right: 1px solid #ddd; padding: 0 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .np-rule-item:last-child { border-right: none; }
+  .tablet-home-bar { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); width: 45px; height: 5px; background: rgba(255,255,255,0.3); border-radius: 3px; }
+  .tablet-dots { display: flex; justify-content: center; gap: 6px; margin-top: 12px; }
+  .tablet-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.2); transition: background 0.4s, transform 0.4s; flex-shrink: 0; }
+  .tablet-dot.active { background: var(--c-turq); transform: scale(1.3); }
+  @media (max-width: 960px) { .press-grid { grid-template-columns: 1fr 1fr; } .press-card--featured { grid-column: span 2; } .press-card--tall { grid-row: span 1; min-height: 240px; } .press-card--tablet { grid-row: span 1; } .tablet-device { max-width: 320px; } }
+  @media (max-width: 580px) { .press-grid { grid-template-columns: 1fr; gap: 12px; } .press-card--featured { grid-column: span 1; } .press-section { padding: 50px 0 70px; } .press-card--tablet { display: none; } }
+
+  /* ── ESTILOS SECCIÓN 5: POSTULACIONES ── */
+  .section-postulaciones {
+    position: relative; width: 100%; padding: 8rem 2rem; 
+    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url('A2FF33A3-DD3F-453E-AA50-7023C52F6F7D.jpeg') center/cover no-repeat;
+    font-family: 'DM Sans', sans-serif; color: #fff; overflow: hidden; cursor: none; 
+    min-height: 100vh;
+  }
+  .header-postulaciones { text-align: center; margin-bottom: 2rem; }
+  .eyebrow-postulaciones { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(.8rem, 1.6vw, 1rem); letter-spacing: .2em; text-transform: uppercase; color: #ffffff; margin-bottom: 0.5em; text-shadow: 0 2px 8px rgba(0,0,0,0.8); }
+  .title-postulaciones { font-family: 'DM Sans', sans-serif; font-size: clamp(1.1rem, 2vw, 1.4rem); font-weight: 500; line-height: 1.4; letter-spacing: 0.18em; margin-bottom: 0.5rem; text-shadow: 0 2px 5px rgba(0,0,0,0.8); text-transform: uppercase; color: rgba(255,255,255,0.75); }
+  .categorias-wrapper { margin-bottom: 3rem; position: relative; }
+  .marquee { display: flex; flex-wrap: wrap; justify-content: center; overflow: visible; user-select: none; gap: 1rem; margin-bottom: 1rem; }
+  .marquee-content { display: flex; flex-wrap: wrap; justify-content: center; min-width: auto; gap: 1rem; animation: none; }
+  .marquee-content.reverse { animation: none; }
+  .marquee:hover .marquee-content { animation-play-state: paused; }
+  @keyframes scroll-left { from { transform: translateX(0); } to { transform: translateX(calc(-100% - 1rem)); } }
+  @keyframes scroll-right { from { transform: translateX(calc(-100% - 1rem)); } to { transform: translateX(0); } }
+  .cat-pill { padding: 0.5rem 1.5rem; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 50px; font-size: 0.9rem; font-weight: 400; white-space: nowrap; transition: background 0.3s ease, border-color 0.3s ease; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); color: rgba(255,255,255,0.8); }
+  .cat-pill:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.35); color: #fff; }
+  .rubros-container { max-width: 1200px; margin: 0 auto; }
+  .rubros-title { font-family: 'DM Sans', sans-serif; font-size: 0.75rem; font-weight: 600; text-align: center; color: rgba(255,255,255,0.4); margin-bottom: 1.5rem; text-shadow: 0 2px 5px rgba(0,0,0,0.8); letter-spacing: 0.22em; text-transform: uppercase; }
+  .rubros-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0.75rem; }
+  .rubro-card { background: rgba(10, 10, 10, 0.55); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 1rem; display: flex; align-items: center; gap: 0.8rem; transition: background 0.25s ease, border-color 0.25s ease; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
+  .rubro-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.2); flex-shrink: 0; transition: background 0.25s ease; }
+  .rubro-text { font-size: 0.85rem; font-weight: 400; line-height: 1.2; color: rgba(255,255,255,0.8); }
+  .rubro-card:hover { background: rgba(255, 255, 255, 0.07); border-color: rgba(255, 255, 255, 0.2); }
+  .rubro-card:hover .rubro-dot { background: rgba(255,255,255,0.6); }
+  /* CORRECCIÓN: bases-banner ahora es la sección Bases con el id correcto */
+  .bases-banner { max-width: 900px; margin: 3rem auto 0; padding: 2rem 1.5rem; background: linear-gradient(135deg, rgba(32,178,170,0.1), rgba(255,215,0,0.1)); border: 1px solid rgba(255,215,0,0.3); border-radius: 16px; text-align: center; position: relative; overflow: hidden; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+  .bases-banner::before { content: ''; position: absolute; top: 50%; left: 50%; width: 150px; height: 150px; background: rgba(255,215,0,0.2); filter: blur(60px); transform: translate(-50%, -50%); pointer-events: none; }
+  .bases-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; text-shadow: 0 2px 5px rgba(0,0,0,0.8); }
+  .bases-desc { color: rgba(255,255,255,0.8); margin-bottom: 1.5rem; font-size: 1rem; text-shadow: 0 2px 5px rgba(0,0,0,0.8); }
+  .btn-bases { display: inline-block; padding: 0.8rem 2rem; background: #FFD700; color: #000; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; border-radius: 50px; text-decoration: none; transition: all 0.3s ease; box-shadow: 0 8px 20px rgba(255, 215, 0, 0.2); }
+  .btn-bases:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(255, 215, 0, 0.4); background: #fff; }
+  @media (max-width: 768px) { .section-postulaciones { padding: 2rem 1rem; } .header-postulaciones { margin-bottom: 1.5rem; } .rubros-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); } .bases-banner { padding: 2rem 1rem; margin-top: 2rem; } }
+
+  /* ── ESTILOS SPONSORS Y ACOMPAÑAN ── */
+  .premium-brands {
+    padding: 80px 20px; text-align: center; position: relative; overflow: hidden;
+    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)), url('4F4B3C67-E202-44E8-BD46-73488558631F.jpeg') center/cover no-repeat;
+    min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
+  }
+  .brand-h2 {
+    font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(2rem, 4vw, 3.2rem);
+    color: #ffffff; text-transform: uppercase; letter-spacing: 0.12em; margin: 0 0 40px 0;
+    line-height: 1; display: flex; align-items: center; justify-content: center; gap: 16px; text-shadow: 0 2px 5px rgba(0,0,0,0.8);
+  }
+  /* Icono cursor para SPONSORS (amarillo dorado) */
+  .brand-h2.sponsors-title::before {
+    content: ''; display: inline-block; width: 24px; height: 33px; flex-shrink: 0;
+    background: repeating-radial-gradient(circle at 40% 50%, transparent 0, transparent 2px, #FFD700 3px, #FFD700 4.5px);
+    clip-path: polygon(10% 0%,95% 5%,85% 40%,65% 75%,55% 100%,45% 100%,25% 65%,5% 30%);
+    filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.7));
+  }
+  /* Icono cursor para ACOMPAÑAN (turquesa) */
+  .brand-h2.acompanan-title::before {
+    content: ''; display: inline-block; width: 24px; height: 33px; flex-shrink: 0;
+    background: repeating-radial-gradient(circle at 40% 50%, transparent 0, transparent 2px, #36B4A9 3px, #36B4A9 4.5px);
+    clip-path: polygon(10% 0%,95% 5%,85% 40%,65% 75%,55% 100%,45% 100%,25% 65%,5% 30%);
+    filter: drop-shadow(0 0 6px rgba(54, 180, 169, 0.7));
+  }
+  .brand-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 60px; margin-bottom: 80px; max-width: 1200px; margin-left: auto; margin-right: auto; }
+  .marquee-container { width: 100%; max-width: 1200px; margin: 0 auto; overflow: hidden; position: relative; padding: 20px 0; display: flex; flex-direction: column; gap: 40px; -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); }
+  .marquee-track { display: flex; width: max-content; gap: 60px; }
+  .track-left { animation: scroll-left 90s linear infinite; }
+  .track-right { animation: scroll-right 90s linear infinite; }
+  .marquee-track:hover { animation-play-state: paused; }
+  .logo-box { position: relative; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); flex-shrink: 0; }
+  .sponsor-size { height: 250px; width: 440px; }
+  .acompanan-size { height: 110px; width: 220px; }
+  /* Logos visibles por defecto sin opacidad, se aclaran al hover */
+  .logo-box img { width: 100%; height: 100%; object-fit: contain; filter: grayscale(1) brightness(1.5); opacity: 1; transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); position: relative; z-index: 2; }
+  .logo-box::before { content: ''; position: absolute; inset: 50%; background: radial-gradient(circle, var(--glow-color) 0%, transparent 70%); opacity: 0; z-index: 1; transition: all 0.6s ease; filter: blur(20px); }
+  .logo-box:hover { transform: translateY(-5px) scale(1.05); z-index: 10; }
+  .logo-box:hover img { filter: grayscale(0) brightness(1.1); opacity: 1; }
+  .logo-box:hover::before { inset: -40px; opacity: 1; }
+  .logo-box:nth-child(6n+1) { --glow-color: var(--c-violet); }
+  .logo-box:nth-child(6n+2) { --glow-color: var(--c-turq); }
+  .logo-box:nth-child(6n+3) { --glow-color: var(--c-yel); }
+  .logo-box:nth-child(6n+4) { --glow-color: var(--c-pink); }
+  .logo-box:nth-child(6n+5) { --glow-color: var(--c-blue); }
+  .logo-box:nth-child(6n+6) { --glow-color: var(--c-org); }
+  @media (max-width: 768px) { .sponsor-size { height: 170px; width: 300px; } .acompanan-size { height: 80px; width: 160px; } .brand-grid { gap: 40px; margin-bottom: 60px; } .marquee-track { gap: 40px; } .marquee-container { gap: 20px; -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent); mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent); } }
+
+  /* ── ESTILOS FOOTER ── */
+  .premium-footer { background: #050505; border-top: 1px solid rgba(255, 255, 255, 0.05); padding: 80px 20px 30px; font-family: 'DM Sans', sans-serif; color: rgba(255, 255, 255, 0.7); position: relative; overflow: hidden; }
+  .premium-footer::before { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 60%; height: 2px; background: radial-gradient(circle, #36B4A9 0%, transparent 100%); opacity: 0.3; box-shadow: 0 0 50px 20px rgba(54, 180, 169, 0.1); }
+  .footer-container { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr 1.5fr; gap: 60px; align-items: start; }
+  .footer-col-brand { display: flex; flex-direction: column; gap: 20px; }
+  .footer-logo { max-width: 260px; height: auto; filter: brightness(0.9); transition: 0.4s ease; }
+  .footer-logo:hover { filter: brightness(1) drop-shadow(0 0 15px rgba(255,255,255,0.2)); }
+  .footer-desc { font-size: 0.9rem; line-height: 1.6; max-width: 250px; color: rgba(255, 255, 255, 0.5); }
+  .footer-title { font-family: 'Syne', sans-serif; font-size: 1.2rem; color: #fff; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .footer-links { display: flex; flex-direction: column; gap: 15px; }
+  .footer-link-item { display: flex; align-items: center; gap: 12px; color: rgba(255, 255, 255, 0.7); text-decoration: none; font-size: 0.95rem; transition: all 0.3s ease; width: fit-content; }
+  .footer-icon { width: 20px; height: 20px; object-fit: contain; filter: grayscale(100%) brightness(0) invert(1); opacity: 0.7; transition: all 0.3s ease; }
+  .footer-link-item:hover { color: #fff; transform: translateX(5px); }
+  .footer-link-item:hover .footer-icon { opacity: 1; }
+  .link-ig:hover .footer-icon { filter: grayscale(100%) brightness(0) invert(1) drop-shadow(0 0 8px #E54269); }
+  .link-mail:hover .footer-icon { filter: grayscale(100%) brightness(0) invert(1) drop-shadow(0 0 8px #F8C619); }
+  .location-text { font-size: 0.9rem; line-height: 1.5; margin-bottom: 15px; color: rgba(255, 255, 255, 0.6); }
+  .location-text strong { color: #fff; font-weight: 500; }
+  .map-wrapper { width: 100%; height: 120px; border-radius: 8px; overflow: hidden; position: relative; border: 1px solid rgba(255, 255, 255, 0.1); }
+  .map-wrapper iframe { width: 100%; height: 100%; border: 0; filter: invert(90%) hue-rotate(180deg) contrast(1.1) brightness(0.8); transition: filter 0.5s ease; }
+  .map-wrapper iframe:hover { filter: invert(90%) hue-rotate(180deg) contrast(1.2) brightness(1); }
+  .footer-bottom { margin-top: 80px; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.05); display: flex; justify-content: center; align-items: center; }
+  .legal-text { font-size: 0.75rem; color: rgba(255, 255, 255, 0.4); letter-spacing: 0.05em; text-transform: uppercase; }
+  @media (max-width: 900px) { .footer-container { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 600px) { .footer-container { grid-template-columns: 1fr; text-align: center; gap: 50px; } .footer-col-brand, .footer-links { align-items: center; } .footer-desc { margin: 0 auto; } .footer-bottom { text-align: center; } }
+
+  /* ── BOTÓN FLOTANTE POSTULATE ── */
+  .floating-postulate {
+    position: fixed; right: clamp(16px, 3vw, 32px); bottom: clamp(16px, 3vw, 32px);
+    z-index: 500; display: flex; flex-direction: column; align-items: center; gap: 6px;
+    text-decoration: none; padding: 1rem 1.8rem; border-radius: 50px;
+    background: linear-gradient(135deg, #FFD700 0%, #FFC400 100%); color: #000;
+    font-family: 'DM Sans', sans-serif; cursor: none; isolation: isolate;
+    box-shadow: 0 8px 25px rgba(255, 215, 0, 0.35), 0 0 0 1px rgba(255,255,255,0.15) inset;
+    transition: transform 0.35s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.35s ease;
+    opacity: 0; transform: translateY(20px); animation: floatIn 0.8s 1.4s cubic-bezier(0.25,0.8,0.25,1) forwards;
+  }
+  .floating-postulate::before {
+    content: ''; position: absolute; inset: -6px; border-radius: 50px; z-index: -1;
+    background: radial-gradient(circle, rgba(255,215,0,0.5) 0%, transparent 70%);
+    animation: pulseGlow 2.6s ease-in-out infinite;
+  }
+  @keyframes pulseGlow { 0%, 100% { opacity: 0.5; transform: scale(0.95); } 50% { opacity: 1; transform: scale(1.08); } }
+  @keyframes floatIn { to { opacity: 1; transform: translateY(0); } }
+  .floating-postulate:hover { transform: translateY(-5px) scale(1.04); box-shadow: 0 15px 35px rgba(255, 215, 0, 0.5), 0 0 0 1px rgba(255,255,255,0.25) inset; }
+  .fp-label { font-size: 0.95rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; line-height: 1; }
+  .fp-sub { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; opacity: 0.75; line-height: 1; white-space: nowrap; }
+  @media (max-width: 600px) {
+    .floating-postulate { padding: 0.8rem 1.3rem; }
+    .fp-label { font-size: 0.8rem; }
+    .fp-sub { font-size: 0.55rem; }
+  }
+
+@media (max-width: 850px) {
+  /* 1. HEADER: Más compacto para que no tape el Hero */
+  .main-header-bar {
+    padding: 0.8rem 1rem 0.5rem 1rem !important;
+    gap: 0.5rem !important;
+  }
+  .header-logo {
+    height: 45px !important; /* Logo mucho más pequeño en móvil */
+  }
+  .nav-menu {
+    width: 95vw !important; 
+  }
+
+  /* 2. SECCIÓN OBJETIVOS: Apilar en vertical */
+  .premio-section-container {
+    flex-direction: column !important;
+    padding: 7rem 1rem 3rem 1rem !important;
+    gap: 2rem !important;
+  }
+  .premio-text-side {
+    text-align: center;
+    max-width: 100% !important;
+  }
+  .premio-text-side h2 {
+    font-size: 2.2rem !important;
+  }
+  .auto-circle-widget {
+    max-width: 260px !important; /* Widget circular más chico */
+  }
+  #auto-num { font-size: 3rem !important; }
+  .center-content { padding: 1.5rem !important; }
+
+  /* 3. SECCIÓN PREMIADOS: Evitar que las tarjetas se corten */
+  .gs-section-title {
+    font-size: 2.2rem !important;
+  }
+  .gs-swiper .swiper-slide {
+    width: 250px !important; /* Tarjetas más finas para que entren en pantalla */
+  }
+  .gs-counter {
+    font-size: 5rem !important;
+    right: 10px !important;
+  }
+  .gs-info {
+    padding: 20px 15px 15px !important;
+  }
+
+  /* 4. SECCIÓN MEDIOS / NOTICIAS */
+  .np-body {
+    flex-direction: column !important; /* Pasa la imagen arriba y texto abajo */
+  }
+  .np-col-main, .np-col-side {
+    width: 100% !important;
+    padding-right: 0 !important;
+    border-right: none !important;
+  }
+  .np-headline {
+    font-size: 1.5rem !important;
+  }
+
+  /* 5. GENERALES: Evitar cualquier desbordamiento horizontal */
+  html, body {
+    overflow-x: hidden !important;
+    max-width: 100vw !important;
+  }
+}
+
+/* 6. AJUSTES PARA PANTALLAS MUY PEQUEÑAS (ej. iPhone SE) */
+@media (max-width: 480px) {
+  .header-logo {
+    height: 35px !important;
+  }
+  .gs-swiper .swiper-slide {
+    width: 220px !important;
+  }
+  .premio-text-side h2 {
+    font-size: 1.8rem !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- Elementos del Cursor Global -->
+<div id="cur"></div>
+<div id="cur-ring"><div class="fp-logo"></div></div>
+
+<!-- ══ BOTÓN FLOTANTE POSTULATE ══ -->
+<a href="https://docs.google.com/forms/d/e/1FAIpQLSfGdvfIk0kfhgIWEoQdmpED6rQOMXCMyXzHeucV8ypKgoHyGg/viewform?usp=header" class="floating-postulate inter-item" target="_blank" rel="noopener noreferrer">
+  <span class="fp-label">Postulate</span>
+  <span class="fp-sub">Cierra el 31 de agosto</span>
+</a>
+
+<!-- ══ HEADER ══ -->
+<!-- CORRECCIÓN DE ANCLAS:
+     - "Postulate"  → apunta a #hero      (sección 1, donde está el botón grande de postularse)
+     - "Objetivos"  → apunta a #Objetivos (sección 2)
+     - "Premiados"  → apunta a #Premiados (sección 3)
+     - "Difusion"   → apunta a #Difusion  (sección 4)
+     - "Bases"      → apunta a #Bases     (sección de bases dentro de postulaciones)
+     - "Acompañan"  → apunta a #Acompañan (sponsors)
+-->
+<header class="main-header-bar">
+  <div class="header-col-left">
+    <a href="#hero">
+      <img class="header-logo" src="EED4ADC9-D49A-423A-8FBC-CDD2B268E2C3.png" alt="Logo Premio">
+    </a>
+  </div>
+  <div class="header-col-center">
+    <nav class="nav-menu" id="nav-menu">
+      <a href="#hero" class="nav-item">Postulate</a>
+      <a href="#Objetivos" class="nav-item">Objetivos</a>
+      <a href="#Premiados" class="nav-item">Premiados</a>
+      <a href="#Difusion" class="nav-item">Difusion</a>
+      <a href="#Bases" class="nav-item">Bases</a>
+      <a href="#Acompañan" class="nav-item">Acompañan</a>
+      <div class="nav-cursor" id="nav-cursor"></div>
+    </nav>
+    <div class="swipe-hint">Deslizá para ver más ⟷</div>
+  </div>
+  <div class="header-col-right"></div>
+</header>
+
+<!-- ══ SECCIÓN 1: HERO ══ -->
+<!-- CORRECCIÓN: id="hero" para que el botón "Postulate" del nav llegue acá -->
+<section class="hero" id="hero">
+  <div class="rings">
+    <div class="ring r5"></div>
+    <div class="ring r4"></div>
+    <div class="ring r3"></div>
+    <div class="ring r2"></div>
+    <div class="ring r1"></div>
+  </div>
+  <div class="content">
+    <p class="eyebrow">FORO FEDERAL PRESENTA</p>
+    <h1 class="title">
+      <span class="solid-white">PREMIO</span>
+      <span class="dynamic-color">ECONOMÍA CIRCULAR</span>
+    </h1>
+    <p class="sub">En el marco del FORO se llevara a cabo la entrega de los Premios Nacionales, en la Bolsa de Comercio de Buenos&nbsp;Aires.</p>
+    <div class="actions">
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSfGdvfIk0kfhgIWEoQdmpED6rQOMXCMyXzHeucV8ypKgoHyGg/viewform?usp=header" class="btn-main inter-item" target="_blank" rel="noopener noreferrer">Postularse</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SECCIÓN 2: OBJETIVOS ══ -->
+<div class="premio-section-container" id="Objetivos">
+  <div class="premio-text-side">
+    <h2>Nuestros Objetivos</h2>
+    <p id="subtitulo-indicador">Premio Economía Circular Argentina</p>
+  </div>
+  <div class="premio-widget-side inter-item" id="hover-zone">
+    <div class="auto-circle-widget" id="circle-widget">
+      <div class="rotating-bg"></div>
+      <div class="center-content" id="center-box">
+        <div class="text-wrapper" id="text-wrapper">
+          <div id="auto-num">01</div>
+          <h3 id="auto-title">Impulsar y Fomentar</h3>
+          <p id="auto-desc">Iniciativas que potencien la Economía Circular en todas las regiones del país.</p>
+        </div>
+      </div>
+      <div class="dots-container" id="dots">
+        <div class="dot active"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SECCIÓN 3: PREMIADOS ══ -->
+<!-- CORRECCIÓN: título "PREMIADOS" añadido + sección con altura completa -->
+<section class="gs" id="Premiados">
+  <canvas id="gs-canvas"></canvas>
+  <div class="gs-counter" id="gsCounter">01</div>
+  <!-- NUEVO TÍTULO DE SECCIÓN -->
+  <h2 class="gs-section-title">PREMI<span>ADO</span>S</h2>
+  <div class="gs-outer">
+    <div class="swiper gs-swiper" id="gsSwiper">
+      <div class="swiper-wrapper" id="gs-wrapper"></div>
+    </div>
+  </div>
+  <div class="controls-wrapper">
+    <div class="gs-nav">
+      <button class="gs-btn inter-item" id="gsPrev" aria-label="Anterior">&#8592;</button>
+      <button class="gs-btn inter-item" id="gsNext" aria-label="Siguiente">&#8594;</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SECCIÓN 4: MEDIOS ══ -->
+<!-- CORRECCIÓN: nueva imagen de fondo + eliminado eyebrow "cobertura mediática" -->
+<section class="press-section" id="Difusion">
+  <div class="press-inner">
+    <div class="press-header">
+      <!-- press-eyebrow está oculto via CSS (display:none) -->
+      <div class="press-eyebrow">Cobertura mediática</div>
+      <h2 class="press-title">Lo que dicen<br>los <span>medios</span></h2>
+    </div>
+    <div class="press-grid">
+      <a class="press-card press-card--featured inter-item" href="https://economis.com.ar/la-bolsa-de-comercio-fue-sede-del-premio-argentina-economia-circular-2025/" target="_blank" rel="noopener" style="--accent-color: var(--c-violet);">
+        <div class="press-card__bg" style="background-image:url('https://economis.com.ar/wp-content/uploads/2025/10/WhatsApp-Image-2025-10-01-at-14.34.04.jpeg')"></div>
+        <div class="press-card__overlay"></div>
+        <div class="press-card__index">01</div>
+        <div class="press-card__content">
+          <div class="press-card__source"><span class="press-card__logo">Economis</span><span class="press-card__date">Oct 2025</span></div>
+          <div class="press-card__headline">La Bolsa de Comercio fue sede del Premio Argentina Economía Circular 2025</div>
+          <div class="press-card__excerpt">Empresas, gobiernos, pymes, emprendedores, instituciones y ONGs que impulsan una economía regenerativa y resiliente fueron reconocidos en la tercera edición del premio.</div>
+          <div class="press-card__arrow">Leer nota <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+      </a>
+      <div class="press-card press-card--tablet inter-item" style="--accent-color: var(--c-turq);">
+        <div class="tablet-device" id="tabletDevice">
+          <div class="tablet-camera"></div>
+          <div class="tablet-screen" id="tabletScreen"></div>
+          <div class="tablet-home-bar"></div>
+        </div>
+        <div class="tablet-dots" id="tabletDots"></div>
+      </div>
+      <a class="press-card inter-item" href="https://www.infobae.com/economia/2025/09/26/distinguieron-a-la-empresa-ocp-tech-en-la-bolsa-de-comercio-por-su-proyecto-huella-de-carbono/" target="_blank" rel="noopener" style="--accent-color: var(--c-pink);">
+        <div class="press-card__bg" style="background-image:url('https://www.infobae.com/resizer/v2/MWG42AWTJ5HXFKTESGYTUL2PWY.jpg?auth=a9e78e21a6dc611ce54070e5712bde105bca817fa3f73ade7f40ab460a5cd64d&smart=true&width=1200&height=630&quality=85')"></div>
+        <div class="press-card__overlay"></div>
+        <div class="press-card__index">02</div>
+        <div class="press-card__content">
+          <div class="press-card__source"><span class="press-card__logo">Infobae</span><span class="press-card__date">Sep 2025</span></div>
+          <div class="press-card__headline">Distinguieron a OCP Tech en la Bolsa de Comercio por su proyecto Huella de Carbono</div>
+          <div class="press-card__arrow">Leer nota <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+      </a>
+      <a class="press-card inter-item" href="https://rafaelasustentable.com.ar/rafaela-recibio-el-premio-nacional-argentina-economia-circular/" target="_blank" rel="noopener" style="--accent-color: var(--c-turq);">
+        <div class="press-card__bg" style="background-image:url('https://rafaelasustentable.com.ar/wp-content/uploads/2023/07/WhatsApp-Image-2023-07-04-at-13.30.06.jpg'); background-position: 35% 15%; background-size: 135%;"></div>
+        <div class="press-card__overlay"></div>
+        <div class="press-card__index">03</div>
+        <div class="press-card__content">
+          <div class="press-card__source"><span class="press-card__logo">Rafaela Sustentable</span><span class="press-card__date">Jul 2023</span></div>
+          <div class="press-card__headline">Rafaela recibió el Premio Nacional Argentina Economía Circular</div>
+          <div class="press-card__arrow">Leer nota <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+      </a>
+      <a class="press-card inter-item" href="https://www.infobae.com/economia/2024/10/25/economia-circular-premiaron-a-un-grupo-de-proyectos-por-desarrollar-practicas-productivas-sustentables/" target="_blank" rel="noopener" style="--accent-color: var(--c-org);">
+        <div class="press-card__bg" style="background-image:url('https://www.infobae.com/resizer/v2/GOHSQDBW55CZPMUUCGPGSXXLSI.jpg?auth=df5328bb334aa1f9de16bc83826c82ae211b988d6bcf442ede04d8c7faebcdb2')"></div>
+        <div class="press-card__overlay"></div>
+        <div class="press-card__index">04</div>
+        <div class="press-card__content">
+          <div class="press-card__source"><span class="press-card__logo">Infobae</span><span class="press-card__date">Oct 2024</span></div>
+          <div class="press-card__headline">Premiaron proyectos por desarrollar prácticas productivas sustentables</div>
+          <div class="press-card__arrow">Leer nota <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+      </a>
+      <a class="press-card inter-item" href="https://cordoba.gob.ar/cordoba-fue-multi-galardonada-por-sus-politicas-sustentables-en-los-premios-argentina-economia-circular/" target="_blank" rel="noopener" style="--accent-color: var(--c-blue);">
+        <div class="press-card__bg" style="background-image:url('https://cordoba.gob.ar/wp-content/uploads/2024/10/3feab00c-70d7-4c72-8ff6-6f20a81d8ff9-800x400.png')"></div>
+        <div class="press-card__overlay"></div>
+        <div class="press-card__index">05</div>
+        <div class="press-card__content">
+          <div class="press-card__source"><span class="press-card__logo">Córdoba Gob</span><span class="press-card__date">2024</span></div>
+          <div class="press-card__headline">Córdoba fue multi-galardonada por sus políticas sustentables</div>
+          <div class="press-card__arrow">Leer nota <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+      </a>
+      <a class="press-card inter-item" href="https://www.memo.com.ar/runrunes/economia-circular-ciudad-mendoza/" target="_blank" rel="noopener" style="--accent-color: var(--c-violet);">
+        <div class="press-card__bg" style="background-image:url('https://www.memo.com.ar/files/image/55/55693/64a3ee96c02ee_600_315!.png?s=9325f57d45c58d7ccdf3ef565391e34e&d=1773010842')"></div>
+        <div class="press-card__overlay"></div>
+        <div class="press-card__index">06</div>
+        <div class="press-card__content">
+          <div class="press-card__source"><span class="press-card__logo">Memo</span><span class="press-card__date">2024</span></div>
+          <div class="press-card__headline">Premio a la Ciudad de Mendoza por el desarrollo de la Economía Circular</div>
+          <div class="press-card__arrow">Leer nota <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+      </a>
+      <a class="press-card inter-item" href="https://cordoba.gob.ar/la-escuela-municipal-de-economia-circular-y-el-instituto-de-proteccion-ambiental-y-animal-fueron-premiados-a-nivel-nacional/" target="_blank" rel="noopener" style="--accent-color: var(--c-turq);">
+        <div class="press-card__bg" style="background-image:url('https://cordoba.gob.ar/wp-content/uploads/2025/10/WhatsApp-Image-2025-10-02-at-13.09.46-e1759422366242-800x400.jpeg')"></div>
+        <div class="press-card__overlay"></div>
+        <div class="press-card__index">07</div>
+        <div class="press-card__content">
+          <div class="press-card__source"><span class="press-card__logo">Córdoba Gob</span><span class="press-card__date">2025</span></div>
+          <div class="press-card__headline">La Escuela Municipal de Economía Circular y el IPAA fueron premiados a nivel nacional</div>
+          <div class="press-card__arrow">Leer nota <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+      </a>
+      <a class="press-card inter-item" href="https://www.lanacion.com.ar/sociedad/medio-ambiente-distinguen-a-proyecto-naturaleza-de-la-nacion-nid07072023/" target="_blank" rel="noopener" style="--accent-color: var(--c-blue);">
+        <div class="press-card__bg" style="background-image:url('https://www.lanacion.com.ar/resizer/v2/martiniano-molina-y-vicente-donato-director-JC7UHGERQRCIZNODF62XFD2BJE.JPG?auth=8b4bd93c48084058713f9de10854985d26ff807287f80b7ca1dba26891b24b10&width=780&height=520&quality=70&smart=true')"></div>
+        <div class="press-card__overlay"></div>
+        <div class="press-card__index">08</div>
+        <div class="press-card__content">
+          <div class="press-card__source"><span class="press-card__logo">LA NACION</span><span class="press-card__date">Jul 2023</span></div>
+          <div class="press-card__headline">Medio ambiente. Distinguen a Proyecto Naturaleza de LA NACION</div>
+          <div class="press-card__arrow">Leer nota <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+      </a>
+      <a class="press-card inter-item" href="https://www.diariomendoza.com.ar/mendoza/junin-recibio-premio-argentina-economia-circular-su-proyecto-ambiental-junin-punto-limpio-n123493" target="_blank" rel="noopener" style="--accent-color: var(--c-pink);">
+        <div class="press-card__bg" style="background-image:url('https://statics.diariomendoza.com.ar/2025/09/68d5ed2509b7a.jpg')"></div>
+        <div class="press-card__overlay"></div>
+        <div class="press-card__index">09</div>
+        <div class="press-card__content">
+          <div class="press-card__source"><span class="press-card__logo">Diario Mendoza</span><span class="press-card__date">2025</span></div>
+          <div class="press-card__headline">Junín recibió el Premio Argentina Economía Circular por "Junín Punto Limpio"</div>
+          <div class="press-card__arrow">Leer nota <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SECCIÓN 5: POSTULACIONES + BASES ══ -->
+<!-- CORRECCIÓN DE ORDEN: Postulaciones y Bases van ANTES de Sponsors -->
+<!-- CORRECCIÓN: id="Postulate" en la sección (ya no apunta al footer) -->
+<section class="section-postulaciones" id="Postulate">
+  <div class="header-postulaciones">
+    <p class="eyebrow-postulaciones"><strong>Convocatoria abierta PREMIO ECONOMÍA CIRCULAR</strong></p>
+    <h2 class="title-postulaciones">¿Quiénes pueden participar?</h2>
+  </div>
+  <div class="categorias-wrapper">
+    <div class="marquee">
+      <div class="marquee-content">
+        <div class="cat-pill inter-item">Pymes</div><div class="cat-pill inter-item">MiPymes</div><div class="cat-pill inter-item">Grandes Empresas</div><div class="cat-pill inter-item">Emprendimientos</div><div class="cat-pill inter-item">Cooperativas</div><div class="cat-pill inter-item">ONG's, Inst. Privadas, Fundaciones</div>
+      </div>
+    </div>
+    <div class="marquee">
+      <div class="marquee-content reverse">
+        <div class="cat-pill inter-item">Instituciones Públicas</div><div class="cat-pill inter-item">Gobiernos Provinciales</div><div class="cat-pill inter-item">Gobiernos Municipales</div><div class="cat-pill inter-item">Gobiernos Nacionales</div><div class="cat-pill inter-item">Medios de Comunicación</div><div class="cat-pill inter-item">Medios Digitales</div>
+      </div>
+    </div>
+  </div>
+  <div class="rubros-container">
+    <h3 class="rubros-title">RUBROS DE POSTULACIÓN</h3>
+    <div class="rubros-grid">
+      <div class="rubro-card inter-item"><div class="rubro-dot"></div><div class="rubro-text">Innovación Circular</div></div>
+      <div class="rubro-card inter-item"><div class="rubro-dot"></div><div class="rubro-text">Liderazgo Sostenible</div></div>
+      <div class="rubro-card inter-item"><div class="rubro-dot"></div><div class="rubro-text">Comunidad Verde</div></div>
+      <div class="rubro-card inter-item"><div class="rubro-dot"></div><div class="rubro-text">Energía Circular</div></div>
+      <div class="rubro-card inter-item"><div class="rubro-dot"></div><div class="rubro-text">Gestión de Residuos para la Circularidad</div></div>
+      <div class="rubro-card inter-item"><div class="rubro-dot"></div><div class="rubro-text">Reutilización y Depuración de Agua</div></div>
+      <div class="rubro-card inter-item"><div class="rubro-dot"></div><div class="rubro-text">Diseño Sostenible</div></div>
+      <div class="rubro-card inter-item"><div class="rubro-dot"></div><div class="rubro-text">Cadena de Valor Circular</div></div>
+      <div class="rubro-card inter-item"><div class="rubro-dot"></div><div class="rubro-text">Formación en Economía Circular</div></div>
+      <div class="rubro-card inter-item"><div class="rubro-dot"></div><div class="rubro-text">Movilidad Sostenible</div></div>
+      <div class="rubro-card inter-item"><div class="rubro-dot"></div><div class="rubro-text">Complejos Ambientales Circulares</div></div>
+      <div class="rubro-card inter-item"><div class="rubro-dot"></div><div class="rubro-text">Restauración de Ecosistemas</div></div>
+      <div class="rubro-card inter-item"><div class="rubro-dot"></div><div class="rubro-text">Agricultura circular</div></div>
+      <div class="rubro-card inter-item"><div class="rubro-dot"></div><div class="rubro-text">Promoción de Economía circular</div></div>
+      <div class="rubro-card inter-item"><div class="rubro-dot"></div><div class="rubro-text">Impacto Social Circular</div></div>
+      <div class="rubro-card inter-item"><div class="rubro-dot"></div><div class="rubro-text">Consumo Responsable</div></div>
+      <div class="rubro-card inter-item"><div class="rubro-dot"></div><div class="rubro-text">Compromiso Reporte de Sostenibilidad</div></div>
+      <div class="rubro-card inter-item"><div class="rubro-dot"></div><div class="rubro-text">Tecnología para la Circularidad</div></div>
+      <div class="rubro-card inter-item"><div class="rubro-dot"></div><div class="rubro-text">Entornos Construidos</div></div>
+      <div class="rubro-card inter-item"><div class="rubro-dot"></div><div class="rubro-text">Finanzas Sostenibles</div></div>
+    </div>
+  </div>
+  <!-- CORRECCIÓN: id="Bases" aquí, dentro de postulaciones, para que el nav apunte correctamente -->
+  <div class="bases-banner" id="Bases">
+    <h3 class="bases-title">Inicia tu postulación</h3>
+    <p class="bases-desc">Conoce los requisitos técnicos y normativos para participar en la edición 2026.</p>
+    <a href="https://drive.google.com/file/d/1ZIvcelKAuy33qGI_YSM7anhdJ0Dq6y_k/view?usp=sharing" class="btn-bases inter-item" target="_blank" rel="noopener noreferrer">Leer Bases y Condiciones</a>
+  </div>
+</section>
+
+<!-- ══ SPONSORS Y ACOMPAÑAN ══ -->
+<!-- CORRECCIÓN DE ORDEN: Sponsors va DESPUÉS de Postulaciones/Bases, ANTES del footer -->
+<section class="premium-brands" id="Acompañan">
+  <h2 class="brand-h2 sponsors-title">SPONSORS</h2>
+  <div class="brand-grid">
+    <div class="logo-box sponsor-size"><img src="pixellab_2026-06-20T01-38-16Z.png" alt="Sponsor"></div>
+    <div class="logo-box sponsor-size"><img src="pixellab_2026-06-20T01-37-56Z.png" alt="Sponsor"></div>
+  </div>
+  <h2 class="brand-h2 acompanan-title">ACOMPAÑAN</h2>
+  <div class="marquee-container">
+    <div class="marquee-track track-left">
+      <div class="logo-box acompanan-size"><img src="pixellab_2026-06-20T02-03-16Z.png" alt="Acompaña"></div>
+      <div class="logo-box acompanan-size"><img src="pixellab_2026-06-20T01-44-16Z.png" alt="Acompaña"></div>
+      <div class="logo-box acompanan-size"><img src="pixellab_2026-06-20T01-42-49Z.png" alt="Acompaña"></div>
+      <div class="logo-box acompanan-size"><img src="pixellab_2026-06-20T02-02-26Z.png" alt="Acompaña"></div>
+      <div class="logo-box acompanan-size"><img src="pixellab_2026-06-20T01-52-55Z.png" alt="Acompaña"></div>
+      <div class="logo-box acompanan-size"><img src="pixellab_2026-06-20T02-02-51Z.png" alt="Acompaña"></div>
+      <div class="logo-box acompanan-size"><img src="pixellab_2026-06-20T02-03-16Z.png" alt="Acompaña"></div>
+      <div class="logo-box acompanan-size"><img src="pixellab_2026-06-20T01-44-16Z.png" alt="Acompaña"></div>
+      <div class="logo-box acompanan-size"><img src="pixellab_2026-06-20T01-42-49Z.png" alt="Acompaña"></div>
+      <div class="logo-box acompanan-size"><img src="pixellab_2026-06-20T02-02-26Z.png" alt="Acompaña"></div>
+      <div class="logo-box acompanan-size"><img src="pixellab_2026-06-20T01-52-55Z.png" alt="Acompaña"></div>
+      <div class="logo-box acompanan-size"><img src="pixellab_2026-06-20T02-02-51Z.png" alt="Acompaña"></div>
+    </div>
+    <div class="marquee-track track-right">
+      <div class="logo-box acompanan-size"><img src="pixellab_2026-06-20T01-51-16Z.png" alt="Acompaña"></div>
+      <div class="logo-box acompanan-size"><img src="pixellab_2026-06-20T02-02-04Z.png" alt="Acompaña"></div>
+      <div class="logo-box acompanan-size"><img src="pixellab_2026-06-20T01-43-22Z.png" alt="Acompaña"></div>
+      <div class="logo-box acompanan-size"><img src="unnamed%20(1).png" alt="Acompaña"></div>
+      <div class="logo-box acompanan-size"><img src="unnamed%20(2).png" alt="Acompaña"></div>
+      <div class="logo-box acompanan-size"><img src="unnamed%20(3).png" alt="Acompaña"></div>
+      <div class="logo-box acompanan-size"><img src="pixellab_2026-06-20T01-51-16Z.png" alt="Acompaña"></div>
+      <div class="logo-box acompanan-size"><img src="pixellab_2026-06-20T02-02-04Z.png" alt="Acompaña"></div>
+      <div class="logo-box acompanan-size"><img src="pixellab_2026-06-20T01-43-22Z.png" alt="Acompaña"></div>
+      <div class="logo-box acompanan-size"><img src="unnamed%20(1).png" alt="Acompaña"></div>
+      <div class="logo-box acompanan-size"><img src="unnamed%20(2).png" alt="Acompaña"></div>
+      <div class="logo-box acompanan-size"><img src="unnamed%20(3).png" alt="Acompaña"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer class="premium-footer">
+  <div class="footer-container">
+    <div class="footer-col-brand">
+      <img src="EED4ADC9-D49A-423A-8FBC-CDD2B268E2C3.png" alt="Premio Argentina Circular" class="footer-logo">
+      <p class="footer-desc">Reconociendo a quienes transforman el presente para diseñar un futuro sostenible.</p>
+    </div>
+    <div>
+      <h4 class="footer-title">Contacto</h4>
+      <div class="footer-links">
+        <a href="https://www.instagram.com/premiocircular?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" class="footer-link-item link-ig">
+          <img src="87390.png" alt="Instagram" class="footer-icon">
+          @premiocircular
+        </a>
+        <a href="mailto:premioargentinacircular@gmail.com" class="footer-link-item link-mail">
+          <img src="Gmail_icon_(2020).svg.webp" alt="Email" class="footer-icon">
+          premioargentinacircular@gmail.com
+        </a>
+      </div>
+    </div>
+    <div>
+      <h4 class="footer-title">Ubicación</h4>
+      <p class="location-text">
+        <a href="https://share.google/uQrsvTcrb2ylekFsQ" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none;">
+          <strong>Sarmiento 299</strong><br>C1041AAE<br>Cdad. Autónoma de Buenos Aires
+        </a>
+      </p>
+      <div class="map-wrapper">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3284.016713576757!2d-58.3719008!3d-34.6037062!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95a33532c51ebcc1%3A0x6b100778a4b3f!2sSarmiento%20299%2C%20C1041%20AAE%2C%20Buenos%20Aires!5e0!3m2!1ses!2sar!4v1700000000000!5m2!1ses!2sar" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="legal-text">© 2026 Premio Argentina Circular. Todos los derechos reservados ®.</span>
+  </div>
+</footer>
+
+<!-- ══ SCRIPTS DE ANIMACIÓN UNIFICADOS ══ -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+  // -- CURSOR GLOBAL & HOVERS --
+  const globalCur = document.getElementById('cur');
+  const globalRing = document.getElementById('cur-ring');
+  let mx=0, my=0, rx=0, ry=0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    if(globalCur) { globalCur.style.left = mx+'px'; globalCur.style.top = my+'px'; }
+  });
+
+  (function animCursor(){
+    rx += (mx-rx)*.15; ry += (my-ry)*.15;
+    if(globalRing) { globalRing.style.left = rx+'px'; globalRing.style.top = ry+'px'; }
+    requestAnimationFrame(animCursor);
+  })();
+
+  function bindHover(el) {
+    el.addEventListener('mouseenter', () => { if(globalCur) globalCur.classList.add('hovered'); if(globalRing) globalRing.classList.add('hovered'); });
+    el.addEventListener('mouseleave', () => { if(globalCur) globalCur.classList.remove('hovered'); if(globalRing) globalRing.classList.remove('hovered'); });
+  }
+  document.querySelectorAll('.inter-item, .nav-item, .footer-link-item, .logo-box').forEach(bindHover);
+
+  // -- SCRIPT HEADER STICKY AL SCROLL --
+  (function() {
+    const header = document.querySelector('.main-header-bar');
+    if (!header) return;
+    const THRESHOLD = 60;
+    function checkScroll() {
+      if (window.scrollY > THRESHOLD) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    }
+    window.addEventListener('scroll', checkScroll, { passive: true });
+    checkScroll();
+  })();
+
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const menu = document.getElementById('nav-menu');
+    const cursor = document.getElementById('nav-cursor');
+    const items = menu.querySelectorAll('.nav-item');
+    if (cursor && window.matchMedia("(hover: hover)").matches) {
+      items.forEach(item => {
+        item.addEventListener('mouseenter', (e) => {
+          const rect = e.target.getBoundingClientRect();
+          const menuRect = menu.getBoundingClientRect();
+          const left = rect.left - menuRect.left + menu.scrollLeft;
+          cursor.style.width = `${rect.width}px`;
+          cursor.style.transform = `translateX(${left}px)`;
+          cursor.style.opacity = '1';
+        });
+      });
+      menu.addEventListener('mouseleave', () => { cursor.style.opacity = '0'; });
+    }
+  });
+
+  // -- SCRIPT SECCIÓN 2: OBJETIVOS --
+  const objetivos = [
+    { num: "01", title: "Impulsar y Fomentar", desc: "Iniciativas que potencien la Economía Circular en todas las regiones del país.", color: "#1A7870" },
+    { num: "02", title: "Transición Eficaz", desc: "Destacar los proyectos que promuevan un cambio óptimo, contribuyendo al desarrollo productivo sostenible.", color: "#4A90E2" },
+    { num: "03", title: "Mejora y Adaptación", desc: "Contribuir a la productividad de las empresas y la adaptación de los gobiernos a las implicancias del cambio climático.", color: "#9B59B6" }
+  ];
+  let idxSec2 = 0;
+  const widgetContainer = document.getElementById('circle-widget');
+  const numEl = document.getElementById('auto-num');
+  const titleEl = document.getElementById('auto-title');
+  const descEl = document.getElementById('auto-desc');
+  const centerBox = document.getElementById('center-box');
+  const dotsSec2 = document.querySelectorAll('.dot');
+  const subtitulo = document.getElementById('subtitulo-indicador');
+
+  if(widgetContainer) {
+    document.documentElement.style.setProperty('--bullet-color', objetivos[0].color);
+    setInterval(() => {
+      widgetContainer.classList.add('respira');
+      setTimeout(() => {
+        idxSec2 = (idxSec2 + 1) % objetivos.length;
+        const dataAct = objetivos[idxSec2];
+        numEl.innerText = dataAct.num; titleEl.innerText = dataAct.title; descEl.innerText = dataAct.desc;
+        numEl.style.color = dataAct.color; numEl.style.textShadow = `0 0 20px ${dataAct.color}60`;
+        centerBox.style.borderColor = dataAct.color; centerBox.style.boxShadow = `0 20px 50px rgba(0,0,0,0.5), inset 0 0 40px ${dataAct.color}30`; 
+        subtitulo.style.setProperty('--bullet-color', dataAct.color);
+        document.documentElement.style.setProperty('--bullet-color', dataAct.color);
+        dotsSec2.forEach((dot, idx) => { dot.classList.toggle('active', idx === idxSec2); });
+        widgetContainer.classList.remove('respira');
+      }, 1200); 
+    }, 6500);
+  }
+
+  // -- SCRIPT SECCIÓN 3: PREMIADOS --
+  const palette = ['#8F479D', '#36B4A9', '#F8C619', '#E54269', '#36B1E2', '#DB7621'];
+  const fotosLocales = [
+    "44C4A156-7206-418E-98CB-A5CEA9D08F7F.jpeg", "2d29fe00-ff7b-4e31-ab23-cfb6b21faa63.jpeg", "e817663d-ea9a-490e-9485-cda0dd5ff70b.jpeg",
+    "SaveClip.App_573093336_17982834500917336_8120315355511037691_n (1).jpg", "660fb56b-808b-4cd4-8bcf-54ac03925ac7.jpeg",
+    "SaveClip.App_622499091_18074225090369232_9029486188160391438_n.jpg", "9d380b43-b3bf-4e38-8b34-60ddacb7d307.jpeg",
+    "SaveClip.App_573346733_17982830882917336_862484244361149335_n.jpg", "SaveClip.App_654207012_18087841648958594_1531972877644097420_n.jpg",
+    "SaveClip.App_669826410_18573778006022040_2122833315022071899_n.jpg", "Ganadores 2025 - CEAMSEProyecto- Post Cierre y Restauración Ambiental del Complejo Villa Domínic.jpg",
+    "Ganadores 2025 - IVECO GROUPIsla EcológicaIniciativa de economía circular que transforma residuo.jpg", "Ganadores 2025 - Fundación Bunge y Born y British CouncilDiseño Argentino exponencial (DAE) Un p.jpg"
+  ];
+  const wrapper = document.getElementById('gs-wrapper');
+  if(wrapper) {
+    fotosLocales.forEach((src, i) => {
+      const color = palette[i % palette.length];
+      const slide = document.createElement('div');
+      slide.className = 'swiper-slide inter-item';
+      slide.style.setProperty('--card-color', color);
+      slide.innerHTML = `<div class="gs-card"><img src="${src}" alt="Premio" loading="lazy"><div class="gs-info"><span class="gs-info-tag">Comunidad Circular</span></div></div>`;
+      wrapper.appendChild(slide);
+    });
+    const swiper = new Swiper('#gsSwiper', {
+      loop: true, centeredSlides: true, slidesPerView: 'auto', spaceBetween: 10, speed: 800,
+      autoplay: { delay: 2000, disableOnInteraction: false, pauseOnMouseEnter: true },
+      navigation: { nextEl: '#gsNext', prevEl: '#gsPrev' },
+      on: { init: function() { updateUI(this); }, slideChange: function () { updateUI(this); } },
+      breakpoints: { 640: { spaceBetween: 20 }, 1024: { spaceBetween: 30 } }
+    });
+    function updateUI(s) {
+      if(!s || !s.slides) return;
+      const rIdx = s.realIndex; const act = s.slides[s.activeIndex];
+      if(act) {
+          const color = act.style.getPropertyValue('--card-color').trim();
+          const counterEl = document.getElementById('gsCounter');
+          if(counterEl) counterEl.textContent = String(rIdx + 1).padStart(2,'0');
+          document.documentElement.style.setProperty('--card-color', color);
+          // Actualizar también el color del título de sección
+          const secTitle = document.querySelector('.gs-section-title span');
+          if(secTitle) secTitle.style.color = color;
+          document.querySelectorAll('.gs-btn').forEach(b => b.style.setProperty('--card-color', color));
+      }
+    }
+  }
+
+  // -- SCRIPT SECCIÓN 3: CANVAS ORIGINAL ONDAS --
+  const canvas = document.getElementById('gs-canvas');
+  if(canvas) {
+    const ctx = canvas.getContext('2d');
+    let W, H, rings = [];
+    function resize() { const sec = document.querySelector('.gs'); W = canvas.width = sec.offsetWidth; H = canvas.height = sec.offsetHeight; }
+    class WaveRing {
+      constructor() { this.reset(); }
+      reset() { this.radius = Math.random() * 50; this.maxRadius = Math.max(W, H) * 0.8; this.speed = 0.2 + Math.random() * 0.3; this.lineWidth = 1 + Math.random() * 3; this.baseAlpha = 0.05 + Math.random() * 0.1; this.angleOffset = Math.random() * Math.PI * 2; this.arcLength = Math.PI * (0.5 + Math.random() * 1.2); }
+      update() { this.radius += this.speed; this.angleOffset += 0.001; if (this.radius > this.maxRadius) this.reset(); }
+      draw(cX, cY) {
+        let alpha = this.baseAlpha * (1 - (this.radius / this.maxRadius)); if(alpha < 0) alpha = 0;
+        ctx.beginPath(); ctx.arc(cX, cY, this.radius, this.angleOffset, this.angleOffset + this.arcLength);
+        ctx.strokeStyle = window.getComputedStyle(document.documentElement).getPropertyValue('--card-color') || '#F8C619';
+        ctx.globalAlpha = alpha; ctx.lineWidth = this.lineWidth;
+        if(this.lineWidth % 2 > 1) ctx.setLineDash([15, 20]); else ctx.setLineDash([]);
+        ctx.stroke();
+      }
+    }
+    window.addEventListener('resize', resize); resize();
+    for(let i=0; i<35; i++) { let r = new WaveRing(); r.radius = Math.random() * (Math.max(window.innerWidth, window.innerHeight) * 0.8); rings.push(r); }
+    function renderCanvas() {
+        ctx.clearRect(0, 0, W, H); ctx.globalCompositeOperation = 'screen';
+        const time = Date.now() * 0.0005; const cX = W/2 + Math.sin(time) * 50; const cY = H/2 + Math.cos(time*0.8) * 50;
+        rings.forEach(r => { r.update(); r.draw(cX, cY); }); ctx.globalCompositeOperation = 'source-over';
+        requestAnimationFrame(renderCanvas);
+    }
+    renderCanvas();
+  }
+
+  // -- SCRIPT SECCIÓN 4: TABLET MEDIOS --
+  const screenEl = document.getElementById('tabletScreen');
+  if(screenEl) {
+    const pages = [
+      { source: 'Economis', date: '2 Oct 2025', kicker: 'Premio Nacional', headline: 'La Bolsa de Comercio fue sede del Premio Argentina Economía Circular 2025', deck: 'Empresas, gobiernos, pymes, emprendedores, instituciones y ONGs que impulsan una economía regenerativa y resiliente fueron reconocidos en la tercera edición.', img: 'https://economis.com.ar/wp-content/uploads/2025/10/WhatsApp-Image-2025-10-01-at-14.34.04.jpeg', color: palette[0] },
+      { source: 'Infobae', date: '26 Sep 2025', kicker: 'Grandes Empresas', headline: 'Distinguieron a OCP Tech en la Bolsa de Comercio por su proyecto Huella de Carbono', deck: 'La compañía tecnológica fue reconocida en la categoría Grandes Empresas – Compromiso y Reporte de Sostenibilidad por sus innovaciones de bajo impacto ambiental.', img: 'https://www.infobae.com/resizer/v2/MWG42AWTJ5HXFKTESGYTUL2PWY.jpg?auth=a9e78e21a6dc611ce54070e5712bde105bca817fa3f73ade7f40ab460a5cd64d&smart=true&width=1200&height=630&quality=85', color: palette[4] },
+      { source: 'Fortuna · Perfil', date: '8 Oct 2025', kicker: 'Sustentabilidad', headline: 'Hoteles más Verdes fue distinguido en el Premio de Economía Circular', deck: 'El programa de sustentabilidad de la Asociación de Hoteles de Turismo de la República Argentina fue reconocido por su contribución a la concientización sobre el cambio climático.', img: 'https://fotos.perfil.com/2025/10/08/trim/1140/641/gabriela-ferrucci-presidenta-de-la-aht-premio-de-economia-circular-2114737.jpg', color: palette[1] },
+      { source: 'Córdoba Gobierno', date: 'Oct 2025', kicker: 'Políticas Públicas', headline: 'La Escuela Municipal de Economía Circular y el IPAA premiados a nivel nacional', deck: 'La ciudad de Córdoba consolida su liderazgo en materia ambiental con nuevos reconocimientos en los premios Argentina Economía Circular.', img: 'https://cordoba.gob.ar/wp-content/uploads/2025/10/WhatsApp-Image-2025-10-02-at-13.09.46-e1759422366242-800x400.jpeg', color: palette[3] },
+      { source: '0221 · La Plata', date: '2024', kicker: 'Municipios', headline: 'Premiaron a La Plata por su sistema circular de recuperación de residuos electrónicos', deck: 'La distinción al municipio bonaerense fue en el marco del Premio Economía Circular Argentina, que reconoce innovaciones sostenibles en todo el país.', img: 'https://media.0221.com.ar/p/bc3ba266b808191634c4e690715f427a/adjuntos/357/imagenes/100/193/0100193758/1200x630/smart/premio-la-municipalidad-la-plata-residuos-1jpeg.jpeg', color: palette[2] },
+      { source: 'Diario Mendoza', date: 'Sep 2025', kicker: 'Mendoza', headline: 'Junín recibió el Premio Argentina Economía Circular por "Junín Punto Limpio"', deck: 'El municipio mendocino fue distinguido en Buenos Aires como modelo sostenible y referente en gestión ambiental a nivel nacional.', img: 'https://statics.diariomendoza.com.ar/2025/09/68d5ed2509b7a.jpg', color: palette[5] }
+    ];
+    const dotsEl = document.getElementById('tabletDots');
+    pages.forEach((p, i) => {
+      const np = document.createElement('div'); np.className = 'newspaper' + (i===0?' active':''); np.style.setProperty('--accent-col', p.color);
+      np.innerHTML = `<div class="np-masthead"><div class="np-masthead-name">Premio Argentina Economía Circular</div><div class="np-masthead-sub">Cobertura de Medios &nbsp;·&nbsp; ${p.date}</div></div><div class="np-body"><div class="np-col-main"><img class="np-img" src="${p.img}" alt="" loading="lazy"><div class="np-main-text"><div class="np-kicker">${p.kicker}</div><div class="np-headline">${p.headline}</div><div class="np-deck">${p.deck}</div></div></div><div class="np-col-side"><div class="np-source-badge">${p.source}</div><div class="np-date-line">${p.date}</div><div class="np-divider"></div><div class="np-secondary-headline">Premio Argentina Economía Circular</div><div class="np-secondary-body">El premio distingue proyectos, empresas y gobiernos que impulsan modelos productivos sustentables.</div></div></div>`;
+      screenEl.appendChild(np);
+      const d = document.createElement('div'); d.className = 'tablet-dot' + (i===0?' active':''); dotsEl.appendChild(d);
+    });
+    const newspapers = screenEl.querySelectorAll('.newspaper'); const dotsPress = dotsEl.querySelectorAll('.tablet-dot'); let currTab = 0;
+    function goTab(n) { newspapers[currTab].classList.remove('active'); dotsPress[currTab].classList.remove('active'); currTab = n; newspapers[currTab].classList.add('active'); dotsPress[currTab].classList.add('active'); }
+    setInterval(() => goTab((currTab+1) % pages.length), 3500);
+    dotsPress.forEach((d,i) => d.addEventListener('click',()=>goTab(i)));
+  }
+</script>
+</body>
+</html>
