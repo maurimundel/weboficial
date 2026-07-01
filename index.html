@@ -379,8 +379,10 @@
   .brand-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 60px; margin-bottom: 80px; max-width: 1200px; margin-left: auto; margin-right: auto; }
   .marquee-container { width: 100%; max-width: 1200px; margin: 0 auto; overflow: hidden; position: relative; padding: 20px 0; display: flex; flex-direction: column; gap: 40px; -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); }
   .marquee-track { display: flex; width: max-content; gap: 60px; }
-  .track-left { animation: scroll-left 90s linear infinite; }
-  .track-right { animation: scroll-right 90s linear infinite; }
+  @keyframes marquee-scroll-left { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @keyframes marquee-scroll-right { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+  .track-left { animation: marquee-scroll-left 40s linear infinite; }
+  .track-right { animation: marquee-scroll-right 40s linear infinite; }
   .marquee-track:hover { animation-play-state: paused; }
   .logo-box { position: relative; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); flex-shrink: 0; }
   .sponsor-size { height: 250px; width: 440px; }
@@ -398,6 +400,12 @@
   .logo-box:nth-child(6n+5) { --glow-color: var(--c-blue); }
   .logo-box:nth-child(6n+6) { --glow-color: var(--c-org); }
   @media (max-width: 768px) { .sponsor-size { height: 170px; width: 300px; } .acompanan-size { height: 80px; width: 160px; } .brand-grid { gap: 40px; margin-bottom: 60px; } .marquee-track { gap: 40px; } .marquee-container { gap: 20px; -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent); mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent); } }
+  @media (max-width: 600px) {
+    .brand-grid { flex-wrap: nowrap !important; gap: 14px !important; }
+    .sponsor-size { width: 46vw !important; max-width: 175px !important; height: auto !important; aspect-ratio: 440 / 250; }
+    .acompanan-size { height: 60px; width: 120px; }
+    .marquee-track { gap: 26px; }
+  }
 
   /* ── ESTILOS FOOTER ── */
   .premium-footer { background: #050505; border-top: 1px solid rgba(255, 255, 255, 0.05); padding: 80px 20px 30px; font-family: 'DM Sans', sans-serif; color: rgba(255, 255, 255, 0.7); position: relative; overflow: hidden; }
@@ -420,7 +428,13 @@
   .map-wrapper { width: 100%; height: 120px; border-radius: 8px; overflow: hidden; position: relative; border: 1px solid rgba(255, 255, 255, 0.1); }
   .map-wrapper iframe { width: 100%; height: 100%; border: 0; filter: invert(90%) hue-rotate(180deg) contrast(1.1) brightness(0.8); transition: filter 0.5s ease; }
   .map-wrapper iframe:hover { filter: invert(90%) hue-rotate(180deg) contrast(1.2) brightness(1); }
-  .footer-bottom { margin-top: 80px; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.05); display: flex; justify-content: center; align-items: center; }
+  .footer-bottom { margin-top: 80px; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.05); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; }
+  .footer-credits { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 10px; font-size: 0.72rem; letter-spacing: 0.05em; text-transform: uppercase; color: rgba(255, 255, 255, 0.4); }
+  .footer-credits .credit-item { display: flex; align-items: center; gap: 6px; }
+  .footer-credits .credit-logo { height: 20px; width: auto; object-fit: contain; filter: brightness(0) invert(1); opacity: 0.55; transition: opacity 0.3s ease; }
+  .footer-credits .credit-item:hover .credit-logo { opacity: 0.9; }
+  .footer-credits .credit-sep { opacity: 0.25; }
+  .footer-credits strong { color: rgba(255, 255, 255, 0.65); font-weight: 700; }
   .legal-text { font-size: 0.75rem; color: rgba(255, 255, 255, 0.4); letter-spacing: 0.05em; text-transform: uppercase; }
   @media (max-width: 900px) { .footer-container { grid-template-columns: 1fr 1fr; } }
   @media (max-width: 600px) { .footer-container { grid-template-columns: 1fr; text-align: center; gap: 50px; } .footer-col-brand, .footer-links { align-items: center; } .footer-desc { margin: 0 auto; } .footer-bottom { text-align: center; } }
@@ -479,14 +493,20 @@
     font-size: 2.2rem !important;
   }
   .auto-circle-widget {
-    max-width: 260px !important; /* Widget circular más chico */
+    max-width: 300px !important; /* Widget circular un poco más grande para que entre el texto */
   }
-  #auto-num { font-size: 3rem !important; }
-  .center-content { padding: 1.5rem !important; }
+  #auto-num { font-size: 2.6rem !important; margin-bottom: 0.1rem !important; }
+  .center-content { padding: 1.4rem 1.2rem !important; }
+  #auto-title { font-size: 1.05rem !important; line-height: 1.2 !important; margin: 0 0 0.5rem 0 !important; }
+  #auto-desc { font-size: 0.78rem !important; line-height: 1.4 !important; }
+  .premio-text-side p { font-size: 0.9rem !important; }
 
   /* 3. SECCIÓN PREMIADOS: Evitar que las tarjetas se corten */
   .gs-section-title {
-    font-size: 2.2rem !important;
+    font-size: 2.5rem !important;
+    letter-spacing: 0.03em !important;
+    padding: 0 1rem !important;
+    white-space: nowrap !important;
   }
   .gs-swiper .swiper-slide {
     width: 250px !important; /* Tarjetas más finas para que entren en pantalla */
@@ -529,6 +549,16 @@
   }
   .premio-text-side h2 {
     font-size: 1.8rem !important;
+  }
+  .gs-section-title {
+    font-size: 1.9rem !important;
+    letter-spacing: 0.015em !important;
+  }
+  .auto-circle-widget {
+    max-width: 260px !important;
+  }
+  #auto-desc {
+    font-size: 0.72rem !important;
   }
 }
 </style>
@@ -826,12 +856,14 @@
       <div class="logo-box acompanan-size"><img src="pixellab_2026-06-20T02-02-26Z.png" alt="Acompaña"></div>
       <div class="logo-box acompanan-size"><img src="pixellab_2026-06-20T01-52-55Z.png" alt="Acompaña"></div>
       <div class="logo-box acompanan-size"><img src="pixellab_2026-06-20T02-02-51Z.png" alt="Acompaña"></div>
+      <div class="logo-box acompanan-size"><img src="pixellab_2026-07-01T00-29-52Z.png" alt="Acompaña"></div>
       <div class="logo-box acompanan-size"><img src="pixellab_2026-06-20T02-03-16Z.png" alt="Acompaña"></div>
       <div class="logo-box acompanan-size"><img src="pixellab_2026-06-20T01-44-16Z.png" alt="Acompaña"></div>
       <div class="logo-box acompanan-size"><img src="pixellab_2026-06-20T01-42-49Z.png" alt="Acompaña"></div>
       <div class="logo-box acompanan-size"><img src="pixellab_2026-06-20T02-02-26Z.png" alt="Acompaña"></div>
       <div class="logo-box acompanan-size"><img src="pixellab_2026-06-20T01-52-55Z.png" alt="Acompaña"></div>
       <div class="logo-box acompanan-size"><img src="pixellab_2026-06-20T02-02-51Z.png" alt="Acompaña"></div>
+      <div class="logo-box acompanan-size"><img src="pixellab_2026-07-01T00-29-52Z.png" alt="Acompaña"></div>
     </div>
     <div class="marquee-track track-right">
       <div class="logo-box acompanan-size"><img src="pixellab_2026-06-20T01-51-16Z.png" alt="Acompaña"></div>
@@ -883,6 +915,11 @@
     </div>
   </div>
   <div class="footer-bottom">
+    <div class="footer-credits">
+      <span class="credit-item">Organiza <img src="pixellab_2026-07-01T00-29-52Z.png" alt="Organiza" class="credit-logo"></span>
+      <span class="credit-sep">·</span>
+      <span class="credit-item">Realiza <strong>Prosinergias</strong></span>
+    </div>
     <span class="legal-text">© 2026 Premio Argentina Circular. Todos los derechos reservados ®.</span>
   </div>
 </footer>
